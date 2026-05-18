@@ -20,37 +20,76 @@ for our project `deleteWorkout` would delete an existing workout for a specific 
 
 // Returns all todos for a specific user, ordered by creation time
 module.exports.listByUser = async (user_id) => {
-  const query = "SELECT * FROM todos WHERE user_id = $1 ORDER BY todo_id ASC";
+  const query =
+    "SELECT * FROM workouts WHERE user_id = $1 ORDER BY workout_id ASC";
   const { rows } = await pool.query(query, [user_id]);
   return rows;
 };
 
 // Returns a single todo row (used for ownership checks before update/delete)
-module.exports.find = async (todo_id) => {
-  const query = "SELECT * FROM todos WHERE todo_id = $1";
-  const { rows } = await pool.query(query, [todo_id]);
+module.exports.find = async (workout_id) => {
+  const query = "SELECT * FROM workouts WHERE workout_id = $1";
+  const { rows } = await pool.query(query, [workout_id]);
   return rows[0] || null;
 };
 
 // Creates a new todo. Returns the full todo row.
-module.exports.create = async (title, user_id) => {
-  const query =
-    "INSERT INTO todos (title, user_id) VALUES ($1, $2) RETURNING *";
-  const { rows } = await pool.query(query, [title, user_id]);
+module.exports.create = async (
+  title,
+  description,
+  date,
+  type,
+  duration,
+  notes,
+  user_id,
+) => {
+  const query = `INSERT INTO workouts (title, description, date, type, duration, notes, user_id)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
+    RETURNING *`;
+  const { rows } = await pool.query(query, [
+    title,
+    description,
+    date,
+    type,
+    duration,
+    notes,
+    user_id,
+  ]);
   return rows[0];
 };
 
 // Updates is_complete for a todo. Returns the updated row.
-module.exports.update = async (todo_id, { is_complete }) => {
-  const query =
-    "UPDATE todos SET is_complete = $1 WHERE todo_id = $2 RETURNING *";
-  const { rows } = await pool.query(query, [is_complete, todo_id]);
+module.exports.update = async (
+  workout_id,
+  { title, description, date, type, duration, notes },
+) => {
+  const query = `
+    UPDATE workouts
+    SET
+      title       = COALESCE($1, title),
+      description = COALESCE($2, description),
+      date        = COALESCE($3, date),
+      type        = COALESCE($4, type),
+      duration    = COALESCE($5, duration),
+      notes       = COALESCE($6, notes)
+    WHERE workout_id = $7
+    RETURNING *
+  `;
+  const { rows } = await pool.query(query, [
+    title,
+    description,
+    date,
+    type,
+    duration,
+    notes,
+    workout_id,
+  ]);
   return rows[0];
 };
 
 // Deletes a todo by id
-module.exports.destroy = async (todo_id) => {
-  const query = "DELETE FROM todos WHERE todo_id = $1 RETURNING *";
-  const { rows } = await pool.query(query, [todo_id]);
+module.exports.destroy = async (workout_id) => {
+  const query = "DELETE FROM workouts WHERE workout_id = $1 RETURNING *";
+  const { rows } = await pool.query(query, [workout_id]);
   return rows[0] || null;
 };
