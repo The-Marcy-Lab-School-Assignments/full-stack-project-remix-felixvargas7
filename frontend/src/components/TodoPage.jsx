@@ -3,6 +3,31 @@ import { fetchAllTodos } from '../adapters/todo-adapters';
 import AddTodoForm from './AddTodoForm';
 import TodoList from './TodoList';
 
+/*
+What TodoPage does:
+- Owns `todos`, `isLoading`, `error` state
+- Defines loadTodos for refetching from the server
+- Passes down the states as props in other components that are mutating the application with an action
+
+TRANSLATED DOMAIN:
+- We have to change first the names:
+Component:
+  ~ `TodoPage` into `WorkoutPage`
+States:
+  ~ `todos` into `workouts` (handles our workouts now)
+  ~ `isLoading` and `error` stays the same (not specific)
+
+function: 
+  ~ `loadTodos` which allows for refetching from the server for todos,
+  now `loadWorkouts` which will do the same but for workouts
+  ~ `fetchAllTodos` referenced as `fetchAllWorkouts` based on previous modifications
+  ~ callback `useEFfect` function ran changed to `loadTodos()`, allows us to run loadTodos since loadTodos returns a promise
+    - useEffect can't handle async callbacks directly
+    - Needs to be accessible outside of the useEffect to be passed down as props in other components
+  ~ The return section also replaced to have `AddWorkoutForm`, `loadWorkouts={loadWorkouts}`, <p>Loading workouts<p>
+  <WorkoutList workouts={workouts} loadWorkouts={loadWorkouts} />
+*/
+
 function TodoPage({ currentUser, handleLogout }) {
   const [todos, setTodos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
