@@ -31,7 +31,7 @@ function LoginForm({ handleLogin }) {
         required
       />
       {errorMessage && <p className="error">{errorMessage}</p>}
-      <button type="submit">Log In</button>
+      <button type="submit" className="btn-primary">Log In</button>
     </form>
   );
 }
@@ -67,7 +67,7 @@ function RegisterForm({ handleRegister }) {
         required
       />
       {errorMessage && <p className="error">{errorMessage}</p>}
-      <button type="submit">Register</button>
+      <button type="submit" className="btn-primary">Register</button>
     </form>
   );
 }

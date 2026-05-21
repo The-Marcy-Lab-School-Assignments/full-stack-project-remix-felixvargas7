@@ -47,26 +47,33 @@ const handleFetch = async (url, options = {}) => {
   }
 };
 
-export const fetchAllTodos = async () => {
-  return handleFetch("/api/todos");
+export const fetchAllWorkouts = async () => {
+  return handleFetch("/api/workouts");
 };
 
-export const createTodo = async (title) => {
-  return handleFetch("/api/todos", {
+export const createWorkout = async ({
+  title,
+  description,
+  date,
+  type,
+  duration,
+  notes,
+}) => {
+  return handleFetch("/api/workouts", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ title }),
+    body: JSON.stringify({ title, description, date, type, duration, notes }),
   });
 };
 
-export const updateTodo = async (todo_id, updates) => {
-  return handleFetch(`/api/todos/${todo_id}`, {
+export const updateWorkout = async (workout_id, updates) => {
+  return handleFetch(`/api/workouts/${workout_id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(updates),
   });
 };
 
-export const deleteTodo = async (todo_id) => {
-  return handleFetch(`/api/todos/${todo_id}`, { method: "DELETE" });
+export const deleteWorkout = async (workout_id) => {
+  return handleFetch(`/api/workouts/${workout_id}`, { method: "DELETE" });
 };
