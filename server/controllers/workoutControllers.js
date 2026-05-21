@@ -47,14 +47,14 @@ module.exports.deleteWorkout = async (req, res, next) => {
   try {
     const { workout_id } = req.params;
 
-    // First find the todo to verify ownership
+    // First find the workout to verify ownership
     const workout = await workoutModel.find(workout_id);
     if (!workout) return res.status(404).send({ error: "Workout not found." });
     if (workout.user_id !== req.session.user_id) {
       return res.status(403).send({ error: "Not authorized." });
     }
 
-    // Destroy the todo only after ownership has been verified
+    // Destroy the workout only after ownership has been verified
     const destroyedWorkout = await workoutModel.destroy(workout_id);
     res.send(destroyedWorkout);
   } catch (err) {

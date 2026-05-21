@@ -33,10 +33,10 @@ function WorkoutPage({ currentUser, handleLogout }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // This helper fetches todos on page load with useEffect
-  // It is also used within the AddTodoForm and TodoList
-  // to re-fetch the todos when a mutation action is performed
-  // such as creating, deleting, or updating a todo.
+  // This helper fetches workouts on page load with useEffect
+  // It is also used within AddWorkoutForm and WorkoutList
+  // to re-fetch workouts when a mutation action is performed
+  // such as creating or deleting a workout.
   const loadWorkouts = async () => {
     setIsLoading(true);
     setError(null);
