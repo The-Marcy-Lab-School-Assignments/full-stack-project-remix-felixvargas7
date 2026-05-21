@@ -1,20 +1,22 @@
-# Todo App — Full-Stack Case Study
+# Workout Log
 
-A full-stack Todo app built with React, Express, and Postgres. Demonstrates session-based authentication, session rehydration, auth-dependent data fetching, and conditional rendering — the same patterns students use in their full-stack projects.
+A full-stack workout tracker built with React, Express, and Postgres. This application is built for workout enthusiasts who wish to track their progress. It also allows organization for individualized progress.
 
-## User Stories
+## User Stores
 
 **Auth**
+
 - A user can register for an account with a username and password
 - A user can log in to an existing account
 - A user can log out
 - A returning user who has an active session is automatically logged in when they revisit the app
 
-**Todos**
-- A logged-in user can see all of their todos
-- A logged-in user can create a new todo by entering a title
-- A logged-in user can mark a todo as complete or incomplete
-- A logged-in user can delete a todo
+**Workouts**
+
+- A logged-in user can see all of their workouts
+- A logged-in user can create a new workout by creating a title
+- A logged-in user can specific the workout type, date of workout, duration, notes, etc.
+- A logged-in user can create groups of workouts bundled as sessions
 
 ## Schema
 
@@ -25,15 +27,19 @@ user_id       SERIAL PRIMARY KEY
 username      TEXT UNIQUE NOT NULL
 password_hash TEXT NOT NULL
 
-todos
+workouts
 ─────────────────────────────
-todo_id     SERIAL PRIMARY KEY
+workout_id  SERIAL PRIMARY KEY
 title       TEXT NOT NULL
-is_complete BOOLEAN DEFAULT FALSE
+description TEXT NOT NULL
+date        TIMESTAMP NOT NULL
+duration    INT NOT NULL
+type        TEXT NOT NULL
+notes       TEXT
 user_id     INTEGER REFERENCES users(user_id) ON DELETE CASCADE
 ```
 
-A user has many todos. Deleting a user cascades to delete all of their todos.
+A user has many workouts. Deleting a user cascades to delete all of their todos.
 
 ## API Contract
 
@@ -46,14 +52,14 @@ A user has many todos. Deleting a user cascades to delete all of their todos.
 | DELETE | `/api/auth/logout`   | —                        | `{ message }`                     |
 | GET    | `/api/auth/me`       | —                        | `{ user_id, username }` or `null` |
 
-### Todo endpoints (all require authentication)
+### Workout endpoints (all require authentication)
 
-| Method | Endpoint              | Request Body      | Response                                     |
-| ------ | --------------------- | ----------------- | -------------------------------------------- |
-| GET    | `/api/todos`          | —                 | `[{ todo_id, title, is_complete, user_id }]` |
-| POST   | `/api/todos`          | `{ title }`       | `{ todo_id, title, is_complete, user_id }`   |
-| PATCH  | `/api/todos/:todo_id` | `{ is_complete }` | `{ todo_id, title, is_complete, user_id }`   |
-| DELETE | `/api/todos/:todo_id` | —                 | `{ todo_id, title, is_complete, user_id }`   |
+| Method | Endpoint                    | Request Body | Response                                                                       |
+| ------ | --------------------------- | ------------ | ------------------------------------------------------------------------------ |
+| GET    | `/api/workouts`             | —            | `[{ workout_id, title, description, date, duration, type, notes, user_id }]`   |
+| POST   | `/api/workouts`             | `{ title }`  | `{ workout_id   , title, description, date, duration, type, notes,  user_id }` |
+| PATCH  | `/api/workouts/:workout_id` | `{}`         | `{ workout_id,  title, description, date, duration, type, notes, user_id }`    |
+| DELETE | `/api/workouts/:workout_id` | —            | `{ workout_id, title, description, date, duration, type, notes, user_id }`     |
 
 ## Setup
 
@@ -62,7 +68,7 @@ A user has many todos. Deleting a user cascades to delete all of their todos.
 Create a local Postgres database:
 
 ```sh
-createdb todos_casestudy
+createdb workouts_db
 ```
 
 ### 2. Server
@@ -105,13 +111,13 @@ After running `npm run db:seed`, these accounts are available:
 
 | Username | Password    |
 | -------- | ----------- |
-| alice    | password123 |
-| bob      | password123 |
+| reze     | password123 |
+| denji    | password123 |
 
 ## Application Structure
 
 ```
-swe-casestudy-7-todo-app/
+workout-app/
 ├── frontend/               # React app (Vite)
 │   ├── src/
 │   │   ├── App.jsx         # Root component: currentUser state, session rehydration, auth handlers
