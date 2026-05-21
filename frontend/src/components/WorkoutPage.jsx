@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { fetchAllTodos } from '../adapters/todo-adapters';
-import AddTodoForm from './AddTodoForm';
-import TodoList from './TodoList';
+import { fetchAllWorkouts } from '../adapters/workout-adapters';
+import AddWorkoutForm from './AddWorkoutForm';
+import WorkoutList from './WorkoutList';
 
 /*
 What TodoPage does:
@@ -28,8 +28,8 @@ function:
   <WorkoutList workouts={workouts} loadWorkouts={loadWorkouts} />
 */
 
-function TodoPage({ currentUser, handleLogout }) {
-  const [todos, setTodos] = useState([]);
+function WorkoutPage({ currentUser, handleLogout }) {
+  const [workouts, setWorkouts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -37,34 +37,34 @@ function TodoPage({ currentUser, handleLogout }) {
   // It is also used within the AddTodoForm and TodoList
   // to re-fetch the todos when a mutation action is performed
   // such as creating, deleting, or updating a todo.
-  const loadTodos = async () => {
+  const loadWorkouts = async () => {
     setIsLoading(true);
     setError(null);
-    const { data, error: fetchError } = await fetchAllTodos();
+    const { data, error: fetchError } = await fetchAllWorkouts();
     if (fetchError) {
       setError(fetchError.message);
     } else {
-      setTodos(data);
+      setWorkouts(data);
     }
     setIsLoading(false);
   };
 
   useEffect(() => {
-    loadTodos();
+    loadWorkouts();
   }, []);
 
   return (
     <section>
       <div id="user-controls">
         <span>Welcome, <strong>{currentUser.username}</strong>!</span>
-        <button onClick={handleLogout}>Log Out</button>
+        <button onClick={handleLogout} className="btn-logout">Log Out</button>
       </div>
-      <AddTodoForm loadTodos={loadTodos} />
-      {isLoading && <p>Loading todos...</p>}
+      <AddWorkoutForm loadWorkouts={loadWorkouts} />
+      {isLoading && <p>Loading workouts...</p>}
       {error && <p className="error">Something went wrong: {error}</p>}
-      <TodoList todos={todos} loadTodos={loadTodos} />
+      <WorkoutList workouts={workouts} loadWorkouts={loadWorkouts} />
     </section>
   );
 }
 
-export default TodoPage;
+export default WorkoutPage;

@@ -1,4 +1,4 @@
-import { updateTodo, deleteTodo } from '../adapters/todo-adapters';
+import { deleteWorkout } from '../adapters/workout-adapters';
 
 /*
 This file handles the application's updating and deleting actions,
@@ -22,31 +22,26 @@ Our return would not have a checked, since we don't use a boolean, but rather th
       ~ duration 
       ~ notes
 */
-
-function TodoItem({ todo, loadTodos }) {
-  const handleChange = async (e) => {
-    const { error } = await updateTodo(todo.todo_id, { is_complete: e.target.checked });
-    if (error) return console.error(error);
-    loadTodos();
-  };
-
+function WorkoutItem({ workout, loadWorkouts }) {
   const handleDelete = async () => {
-    const { error } = await deleteTodo(todo.todo_id);
+    const { error } = await deleteWorkout(workout.workout_id);
     if (error) return console.error(error);
-    loadTodos();
+    loadWorkouts();
   };
 
   return (
-    <li className="todo-item">
-      <input
-        type="checkbox"
-        checked={todo.is_complete}
-        onChange={handleChange}
-      />
-      <span className={todo.is_complete ? 'completed' : ''}>{todo.title}</span>
+    <li className="workout-item">
+      <div>
+        <strong>{workout.title}</strong>
+        {workout.type && <span> — {workout.type}</span>}
+        {workout.date && <span> | {workout.date}</span>}
+        {workout.duration && <span> | {workout.duration} mins</span>}
+      </div>
+      {workout.description && <p>{workout.description}</p>}
+      {workout.notes && <p><em>{workout.notes}</em></p>}
       <button className="delete-btn" onClick={handleDelete}>Delete</button>
     </li>
   );
 }
 
-export default TodoItem;
+export default WorkoutItem;
