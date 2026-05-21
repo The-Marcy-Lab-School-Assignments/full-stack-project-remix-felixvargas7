@@ -18,7 +18,7 @@ for our project, `updateWorkout` would update an existing workout (the title, da
 for our project `deleteWorkout` would delete an existing workout for a specific user
 */
 
-// Returns all todos for a specific user, ordered by creation time
+// Returns all workouts for a specific user, ordered by creation time
 module.exports.listByUser = async (user_id) => {
   const query =
     "SELECT * FROM workouts WHERE user_id = $1 ORDER BY workout_id ASC";
@@ -26,14 +26,14 @@ module.exports.listByUser = async (user_id) => {
   return rows;
 };
 
-// Returns a single todo row (used for ownership checks before update/delete)
+// Returns a single workout row (used for ownership checks before update/delete)
 module.exports.find = async (workout_id) => {
   const query = "SELECT * FROM workouts WHERE workout_id = $1";
   const { rows } = await pool.query(query, [workout_id]);
   return rows[0] || null;
 };
 
-// Creates a new todo. Returns the full todo row.
+// Creates a new workout. Returns the full workout row.
 module.exports.create = async (
   title,
   description,
@@ -58,7 +58,7 @@ module.exports.create = async (
   return rows[0];
 };
 
-// Updates is_complete for a todo. Returns the updated row.
+// Updates a workout. Returns the updated row.
 module.exports.update = async (
   workout_id,
   { title, description, date, type, duration, notes },
@@ -87,7 +87,7 @@ module.exports.update = async (
   return rows[0];
 };
 
-// Deletes a todo by id
+// Deletes a workout by id
 module.exports.destroy = async (workout_id) => {
   const query = "DELETE FROM workouts WHERE workout_id = $1 RETURNING *";
   const { rows } = await pool.query(query, [workout_id]);

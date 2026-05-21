@@ -41,7 +41,7 @@ const SALT_ROUNDS = 8;
 
   */
 const seed = async () => {
-  // Drop tables in reverse dependency order (todos references users via FK)
+  // Drop tables in reverse dependency order (workouts references users via FK)
   await pool.query("DROP TABLE IF EXISTS workouts CASCADE");
   await pool.query("DROP TABLE IF EXISTS users CASCADE");
 

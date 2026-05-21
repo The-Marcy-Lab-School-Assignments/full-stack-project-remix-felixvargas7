@@ -34,7 +34,7 @@ app.get("/api/auth/me", authControllers.getMe);
 app.delete("/api/auth/logout", authControllers.logout);
 
 // ====================================
-// Todo routes (all require authentication)
+// Workout routes (all require authentication)
 // ====================================
 
 app.get("/api/workouts", checkAuthentication, workoutControllers.listWorkouts);
